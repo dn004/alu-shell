@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#description
+
+argument=$1
+files="/var/run/my_process.pid"
+
+start_create-pid ()
+{
+	./manage_my_process &
+	echo "$!" > "$files"
+}
+
+stop_remove ()
+{
+	pkill -f ./manage_my_process
+	rm "$files"
+}
+
+case "$argument" in
+	start)
+		start_create-pid
+		echo  "manage_my_process started"
+		;;
+	stop)
+		stop_remove
+		echo "manage_my_process stopped"
+		;;
+	restart)
+		stop_remove
+		start_create-pid
+		echo "manage_my_process restarted"
+		;;
+	*)
+		echo "Usage: manage_my_process {start|stop|restart}"
+		;;
+esac
